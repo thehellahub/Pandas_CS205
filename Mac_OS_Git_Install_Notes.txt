@@ -1,0 +1,112 @@
+MacOS Git Install Notes:
+
+
+Author: Nick Hella
+
+*** Sourced from: https://gist.github.com/mindplace/b4b094157d7a3be6afd2c96370d39fad ***
+
+	Let’s try running the command “git” from your terminal..
+
+	If you get an error like: 
+
+		dyld: Library not loaded: @rpath/libswiftCore.dylib
+  			Referenced from: /Applications/Xcode.app/Contents/Developer/usr/bin/			xcodebuild
+  		Reason: image not found
+		git: error: unable to locate xcodebuild, please make sure the path to the 		Xcode folder is set correctly!
+		git: error: You can set the path to the Xcode folder using /usr/bin/		xcode-	select -switch
+
+	Enter the following:
+
+		sudo xcode-select --switch /Library/Developer/CommandLineTools/
+
+	If you never got that error, you’re a rockstar. That took me way too long to figure out how to fix.. Anyways!
+
+	Now you should be able to run “git” from the command line...
+
+	Now let’s create a project directory on your local machine. Enter the following command into your terminal:
+		
+		mkdir ~/Documents/CS_205/PANDAS_CS205
+	
+	Let’s now initialize this this directory in git. Enter the following command:
+		cd ~/Documents/CS_205/PANDAS_CS205 && git init
+
+	Now if you type “git status”, you should see the following output:
+		On branch master
+
+		  No commits yet
+
+	
+
+    U Good up to this point? Radical. Alright here we go..
+
+
+	So now we’re going to perform a git pull. This means we’re going to download everything that’s in your branch on GitHub! The name of your branch should be your first name. Execute the following command:
+
+		git pull https://github.com/thehellahub/Pandas_CS205.git <your_branch>
+
+	Now if we enter “ls” in our terminal, we should see all the files we have in our branch! RADICAL. 
+
+	So.. What’s not so rad is that every time we want to do a git pull, we don’t want to have to reference the URL and the branch. 
+	
+	I know what you’re thinking.. That’s flippin’ lame! - Agreed!
+
+	To fix this, we’re gunna execute the following command:
+
+		git branch --set-upstream-to=origin/<your_branch> master
+
+	NOTE: If at any point you want to pull whatever is in the master branch, just execute the following:
+
+		git pull https://github.com/thehellahub/Pandas_CS205.git master
+
+	NOTE: Although it is NOT recommended, to push to master branch execute the following:
+
+
+		git push origin HEAD:master
+
+		AGAIN… ** IT IS ONLY RECOMMENDED THAT YOU PUSH TO YOUR BRANCH. LET THE GITHUB ADMIN HANDLE MERGES, UNLESS YOU’RE ABSOLUTELY SURE THERE’S NO MERGE CONFLICTS **
+
+	Ok, enough with the caps lock.  
+
+	First we need to check that we’re on the proper branch. To do this, enter the following command:
+
+		git rev-parse --abbrev-ref HEAD
+	
+	Do you see the branch you expected? Radical. 
+
+	If you don’t see the branch you expected, just enter the following command:
+		
+		git checkout <your_branch>
+
+	Better? Radical.
+
+
+	Ok, so let’s say we want to push all our file changes/additions to our branch..
+
+
+	Here’s the series of commands we’re going to use:
+
+
+		git status
+		git add <file1, file2, file3, etc. >
+		git commit -m “Add a comment that describes your new changes”
+		git pull
+		git push origin HEAD:<your_branch>
+		git status
+
+	Note: That last line will likely prompt you to enter your GitHub username and password. Note that if you have 2FA/MFA (y’know..  when it texts your phone a code and you gotta enter it in) - it’s not going to work! At least, I didn’t figure that part out :]
+
+
+	To remove something from your branch in git, execute the following commands
+
+	 	git checkout <your_branch>
+	   git rm <file_to_delete>
+	   git commit -am "deleting <file_to_delete>“
+	   git push origin HEAD:<your_branch>
+	   git status
+
+
+
+
+	
+
+	
