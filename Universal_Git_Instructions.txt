@@ -119,9 +119,6 @@ To remove something from your branch in git, execute the following commands
 
 
 
-Donations are kindly accepted.. BTC: 19sBPJWLYxoEEZcwCeCsCrD41qzbDGvkdS
-
-
 
 	
 

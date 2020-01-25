@@ -48,6 +48,4 @@ Now if you type “git status”, you should see the following output:
 Checkout my universal git instructions txt file for more cool stuff on how to use git. 
 
 
-Donations are kindly accepted.. BTC: 19sBPJWLYxoEEZcwCeCsCrD41qzbDGvkdS
-
 	
