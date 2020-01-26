@@ -4,7 +4,7 @@ If you're not familiar with programming in Python, I'd highly recommend checking
 
 Instructions for installing git are available for Mac OS
 
-Instructions for how to use git are also available
+Universal instructions for how to use git are also available
 
 The data sets are in Comma Separated Value (.CSV) format, a picture of the overall data schema is available as well.
 
