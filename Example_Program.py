@@ -36,8 +36,6 @@ Query example:
 		# Print the example query syntax
 		print(query_structure)
 
-		# Prompt user to enter their own query
-		print("\n Please enter your query: \n")
 
 		# While-True loop for continuous run with designated exit parameter
 		while True:
