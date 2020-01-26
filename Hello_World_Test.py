@@ -3,7 +3,11 @@ Author: Nick Hella
 
 A simple "Hello World" Python program to demonstrate some of the symantics of the Python language
 
+To run this file, (1.) open a terminal	(2.) move into the directory of this file 	(3.) run the command below
 
+	python Hello_World_Test.py
+
+Note, you made need to specify python3 instead of python if you have python2.x by default
 
 '''
 
@@ -11,6 +15,7 @@ class Hello_World_Test:
 
   def main(self):
     print("Hello World!")
+    return
 
 
 # Defining "self", as an instance of the Hello_World_Test class
@@ -30,9 +35,28 @@ self.main()
 # Other basic language semantics:
 '''
 
+#'s are used for comments
+
+Note: Triple single tics are used for declaring block-comments or even block-strings!
+
+
+
+How to declare that a variable is null in Python
+
+	my_null_variable = None
+
+	# None = null
+
+
+
 Declaring a list/array:
 
 	my_list = list(())	or 	my_list = []
+
+
+Getting the length of a list/array
+	
+	len(my_list)
 
 
 Iterating through a list using a for-loop:
@@ -93,6 +117,20 @@ How to break a String into an array/list.
 		# simply use the "delimeter" argument, ie:
 
 			my_string = my_string.split(delimeter=",")
+
+
+Adding and deleting items to a list/array:
+
+	# Declaring the list/array
+	my_list = list(())
+
+	# Adding an item to the list/array:
+	my_list.append("Element1")
+
+	# Note: if you were to print my_list, it would return: ["Element1"]
+
+	# Deleting the element from the list
+	del my_list[0]
 
 
 
