@@ -48,7 +48,7 @@ class Pandas_Example:
 
 		# Let's try printing movies that contain the string "Harry Potter"
 		print("\n Harry Potter movies in the movie data set: \n")
-		print( movies_df [ movies_df['name'].str.contains('Harry Potter') ] )
+		print( movies_df [ movies_df['title'].str.contains('Harry Potter') ] )
 
 		# This should return the following:
 
@@ -80,7 +80,7 @@ class Pandas_Example:
 		# And now  let's also look for the "Harry Potter" movies in this resultset where the year >= 2005
 
 		# Defining harry_potter_movies_df to be the results of our previous print statement
-		harry_potter_movies_df = movies_df[ movies_df['name'].str.contains('Harry Potter') ]
+		harry_potter_movies_df = movies_df[ movies_df['title'].str.contains('Harry Potter') ]
 
 		print("\n Harry Potter movis in the dataset that came out on or after 2005: \n")
 		print( harry_potter_movies_df [ harry_potter_movies_df['year'] >= 2005 ] )
