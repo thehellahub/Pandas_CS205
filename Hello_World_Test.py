@@ -103,6 +103,23 @@ Searching for an item in a list:
 				print("Found you!")
 
 
+Determinig if an element is in a list/array:
+
+	# Let's say we want a boolean function to determine if an element is in a list:
+
+	element_were_looking_for = "5"
+
+	my_list = [0,1,2,3,4,5]
+
+	if element_were_looking_for in my_list:
+		print("True")
+
+	# Note: Instead of having this if branch, you would simply write: print(element_were_looking_for in my_list)
+
+	# This would return:
+	>> True
+
+
 How to break a String into an array/list.
 
 	For this example, we'll use spaces as our delimeter:
