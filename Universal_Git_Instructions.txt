@@ -9,89 +9,67 @@ NOTE: Up to this point, I’m assuming you’ve installed git on your machine an
 Your first steps are to create a project directory somewhere on your machine. 
 
 	For me, I run MacOS (Ubuntu), so I created project directory in:
-		~/Documents/CS_205/PANDAS_CS205
+		~/Documents/CS_205/
 
 	If I were on Windows, it would probably look something like:
-		C:\Users\nhella\Documents\CS_205\PANDAS_CS205
+		C:\Users\nhella\Documents\CS_205\
 
 
 Either way, move into this directory once you have created it. For me, I would enter:
 
 	MacOS: 
-		cd ~/Documents/CS_205/PANDAS_CS205
+		cd ~/Documents/CS_205/
 	Windows:
-		pushd C:\Users\nhella\Documents\CS_205\PANDAS_CS205
+		pushd C:\Users\nhella\Documents\CS_205\
 
 
-Now we're going to initialize the project directory for git. Since you have moved into this directory, now enter the following command:
+Now we're going to clone the Pandas_CS205 repository. Enter the following command:
 	
-	git init
+	git clone https://github.com/thehellahub/Pandas_CS205.git
 
 
-Now if you type “git status”, you should see the following output:
+Now move into the PANDAS_CS205 directory that's been created:
+
+	MacOS: 
+		cd PANDAS_CS205/
+	Windows:
+		pushd PANDAS_CS205/
+
+
+Enter the following command to see what command you're on:
 	
-	On branch master
+	git rev-parse --abbrev-ref HEAD
 
-	No commits yet
-
-
-
-U good up to this point? Yes? Barely? Either way - Radical, dude.
+	NOTE: This command should return "master"
 
 
-So now we’re going to perform a git pull. This means we’re going to download everything that’s in your branch on GitHub! The name of your branch should be your first name. Execute the following command:
+Change into your branch, enter the following command:
 
-		git pull https://github.com/thehellahub/Pandas_CS205.git <your_branch>
+	git checkout <your_branch>
 
+NOTE: The name of your branch should be your first name, and has already been created for you
 
-Now if we enter “ls” in our terminal (use "dir" for Windows), we should see all the files we have in our branch! ...RADICAL!
+To see a full list of the available branches, enter the following command:
 
-
-So.. What’s not so rad tho is that every time we want to do a git pull, we don’t want to have to reference the URL and the branch...
-	
-
-I know what you’re thinking.. That’s like, flippin’ lame dude! - Agreed, man!
+	git branch --list
 
 
-To fix this, we’re going to execute the following command:
-
-		git branch --set-upstream-to=origin/<your_branch> master
-
-	NOTE: If at any point you want to pull whatever is in the master branch, just execute the following:
+NOTE: If at any point you want to pull whatever is in the master branch, just execute the following:
 
 		git pull https://github.com/thehellahub/Pandas_CS205.git master
 
-	NOTE: Although it is NOT recommended, to push to master branch execute the following:
-
+NOTE: Although it is NOT recommended, to push to master branch execute the following:
 
 		git push origin HEAD:master
 
 
-AGAIN… ** IT IS ONLY RECOMMENDED THAT YOU PUSH TO YOUR BRANCH. LET THE GITHUB ADMIN HANDLE MERGES, UNLESS YOU’RE ABSOLUTELY SURE THERE’S NO MERGE CONFLICTS **
+AGAIN… ** IT IS ONLY RECOMMENDED THAT YOU PUSH TO YOUR BRANCH. PLEASE LET THE GITHUB ADMIN HANDLE MERGES, UNLESS YOU’RE ABSOLUTELY SURE THERE’S NO MERGE CONFLICTS **
 
 
 Ok, enough with the caps lock.  
 
 
-First we need to check that we’re on the proper branch. To do this, enter the following command:
-
-		git rev-parse --abbrev-ref HEAD
-	
-
-Do you see the branch you expected? Radical. 
-
-
-If you don’t see the branch you expected, just enter the following command:
-		
-		git checkout <your_branch>
-
-
-Better? Radical.
-
-
-
-Ok, so let’s say we want to push all our file changes/additions to our branch..
-
+So let’s say we want to push all our file changes/additions to our branch..
 
 
 Here’s the series of commands we’re going to use:
