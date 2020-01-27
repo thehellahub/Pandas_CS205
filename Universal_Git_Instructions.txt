@@ -97,6 +97,12 @@ To remove something from your branch in git, execute the following commands
 
 
 
+So what if you do a git status and see a file changed but you have no idea what's changed?
+
+The following command will show you file changes within the terminal:
+
+	git diff <file_name>
+
 
 	
 
