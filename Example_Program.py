@@ -1,5 +1,6 @@
 import pandas as pd
 import shlex
+import sys
 
 
 class Example_Program:
@@ -48,7 +49,7 @@ Query example:
 
 			# Exit parameter
 			if str(query).strip() == 'exit':
-				return
+				sys.exit()
 			else:
 
 				# Breaking query into array, ie: ['title', 'title', '"Harry Potter"', 'date', '2008']
