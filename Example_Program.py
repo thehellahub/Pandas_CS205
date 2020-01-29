@@ -2,17 +2,25 @@ import shlex
 import sys
 import sqlite3
 import csv
+import os
 
 
 class Example_Program:
 
 	def main(self):
 
-		# Creating a connection object to our Sqlite IMDB database
-		conn = sqlite3.connect("imdb.db") # Reading in our sqlite3 db
+		print("Loading CSVs into Sqlite DB...")
+
+		# Creating a sqlite db from all our CSV files
+		os.system("csvs-to-sqlite *.csv imdb.db")
+
+		print("Done!")
 
 		# Intro line
 		print("\n Welcome to the IMDB data set query service brought to you by the Pandas! \n")
+
+				# Creating a connection object to our Sqlite IMDB database
+		conn = sqlite3.connect("imdb.db") # Reading in our sqlite3 db
 
 		# Provide example of query structure, taken from Query_Syntax.txt
 		query_structure = '''
@@ -50,7 +58,7 @@ Query example:
 
 			# Exit parameter
 			if str(query).strip() == 'exit':
-				sys.exit()
+				self.exit()
 			if str(query).strip() == 'help':
 				self.help()
 			if str(query).strip() == 'man':
@@ -86,14 +94,16 @@ Query example:
 
 		return
 
+	def exit(self):
+		os.remove("imdb.db")
+		sys.exit()
+		return
+
 	def help(self):
-
 		print("Help!")
-
 		return
 
 	def man(self):
-
 		manual_string = 
 '''
 
@@ -116,7 +126,6 @@ Query Example (Sytax Explanation):
 
 '''	
 	print(manual_string)
-
 	return
 
 self = Example_Program()

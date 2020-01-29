@@ -1,5 +1,6 @@
 import sqlite3
 import pandas as pd
+import os
 
 '''
 Author: Nick Hella
@@ -27,6 +28,13 @@ Note, you made need to specify python3 instead of python if you have python2.x b
 class Sqlite_Example:
 
 	def main(self):
+
+		print("Loading CSVs into Sqlite DB...")
+
+		# Creating a sqlite db from all our CSV files
+		os.system("csvs-to-sqlite *.csv imdb.db")
+
+		print("Done!")
 
 		# Creating a connection object to our Sqlite IMDB database
 		conn = sqlite3.connect("imdb.db") # Reading in our sqlite3 db
@@ -124,6 +132,7 @@ class Sqlite_Example:
 		'''
 		
 		# Ugh, such good movies.. 
+		os.remove('imdb.db')
 		return
 
 
