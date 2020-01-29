@@ -21,4 +21,4 @@ To verify that you have successfully installed Anaconda, open a new terminal and
 
 	conda list
 
-From this command, you should see the same list of packages that you previously saw when you opened the Anaconda-Navigator app in the Environments pane.
+From this command, you should see the same list of packages that you previously saw when you opened the Anaconda-Navigator app in the Environments pane. 
