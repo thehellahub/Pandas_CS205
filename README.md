@@ -8,7 +8,9 @@ Universal instructions for how to use git are also available
 
 The data sets are in Comma Separated Value (.CSV) format, a picture of the overall data schema is available as well.
 
-If you're unfamiliar with the Pandas python library, I'd highly recommend checking out the Pandas_Example.py file.
+Instructions on how to load the CSVs into a Sqlite DB are available, although it's already been done.
+
+If you're unfamiliar with the Sqlite and/or Pandas python library, I'd highly recommend checking out both the Sqlite_Example.py and Pandas_Example.py files!
 
 Query syntax is described in the file Query_Syntax.txt
 
