@@ -50,7 +50,7 @@ class Pandas_Example:
 		# Let's try printing movies that contain the string "Harry Potter"
 		print("\n Harry Potter movies in the movie data set: \n")
 		print( movies_df [ movies_df['title'].str.contains('Harry Potter') ] )
-
+		
 		# This should return the following:
 
 		'''

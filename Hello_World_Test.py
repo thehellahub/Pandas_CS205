@@ -175,7 +175,6 @@ Declaring an Int:
 
 Declaring a Double:
 
-
 	my_double = 1.5
 
 

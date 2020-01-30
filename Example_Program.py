@@ -27,7 +27,7 @@ class Example_Program:
 
 Query example:
 
-	title title "Harry Potter" year "2008"
+	title,date,genre title "Harry Potter" year "2008"
 	                                  ^ Value we're going to look for
 	                            ^ Column were going to query on
 	                ^ Value we're going to look for
@@ -89,6 +89,8 @@ Query example:
 
 				print(query_data_fields)
 				print(query_data_values)
+
+				desired_data = desired_data.split(delimeter=",")
 
 
 
