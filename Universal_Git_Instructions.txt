@@ -74,6 +74,7 @@ So let’s say we want to push all our file changes/additions to our branch..
 
 Here’s the series of commands we’re going to use:
 
+        git rev-parse --abbrev-ref HEAD (make sure you're on YOUR branch!!)
 
 		git status
 		git add <file1, file2, file3, etc. >
