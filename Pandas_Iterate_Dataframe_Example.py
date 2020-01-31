@@ -31,7 +31,7 @@ and print the following:
 '''
 
 def create_dataframe():
-	# Setting up the dataframe (unimportant.. no need to spend time understandig)
+	# Setting up the dataframe (unimportant.. no need to spend time understanding)
 	the_dict = dict(())
 	the_dict['col1'] = []
 	the_dict['col2'] = []
@@ -71,6 +71,8 @@ def main():
 
 	# Let's get the number of rows
 	number_rows = len(df)
+	print(number_rows)
+	print(len(columns))
 
 	# Iterating the df row-by-row and printing
 	print("\nOutput:")
