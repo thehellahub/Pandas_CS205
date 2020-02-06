@@ -58,7 +58,7 @@ Query example:
 			else:
 
 				# Check to make sure that the query passes data field validation testing
-				@@Exception_Handler
+				#@Exception_Handler
 				Query_Interpreter.data_field_check(self,query)	# checking for proper data fields in the query
 
 				# Check to make sure that the query passes data value validation testing 
