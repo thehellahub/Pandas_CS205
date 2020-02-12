@@ -55,7 +55,7 @@ class Query_Translation:
 		for element in query_elements:
 			if count % 2 != 0:  # odd index is the query field
 				query_data_fields.append(element)
-			if count % 2 ==0: # even index is the value for a query field
+			if count % 2 ==0: # even index is the value for a query field q
 				query_value_fields.append(element)
 			count += 1
 
