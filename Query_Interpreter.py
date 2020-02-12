@@ -7,7 +7,7 @@ import pandas as pd
 
 class Query_Interpreter:
 
-    def data_field_check(self, user_query, db=None):
+    def data_field_check(self, user_query):
         
         #Instructions
         '''
@@ -24,18 +24,9 @@ class Query_Interpreter:
         '''
 
 
-        # TODO: Remove once csv to db function is done:
-        print("Loading CSVs into Sqlite DB...")
-
-        # Creating a sqlite db from all our CSV files
-        os.system("csvs-to-sqlite *.csv imdb.db")
-
-        print("Done!")
 
         # Creating a connection object to our Sqlite IMDB database
         conn = sqlite3.connect("imdb.db") # Reading in our sqlite3 db
-
-        #############################################
 
     # Let's get all the data fields in our database
         # First get tables in database...
@@ -119,10 +110,10 @@ class Query_Interpreter:
         return True
 
 
-user_query = "title,first_name,last_name,gender,rank,year title 'Yeet' year '2008'"
+# user_query = "title,first_name,last_name,gender,rank,year title 'Yeet' year '2008'"
 
 
-self = Query_Interpreter() #instance of object
-self.data_field_check(user_query=user_query)                #call its main | also can be: Query_Interpreter.main(self=Query_Interpreter())
+# self = Query_Interpreter() #instance of object
+# self.data_field_check(user_query=user_query)                #call its main | also can be: Query_Interpreter.main(self=Query_Interpreter())
 
 

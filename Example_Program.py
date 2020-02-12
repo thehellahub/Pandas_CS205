@@ -92,8 +92,6 @@ Query example:
 
 				desired_data = desired_data.split(delimeter=",")
 
-
-
 		return
 
 	def exit(self):
