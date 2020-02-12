@@ -112,7 +112,7 @@ class Sqlite_Example:
 		# That was cool! Now let's try combining multiple tables...
 		# Let's try pulling in the genre from our last query
 
-		sql = "SELECT title, year, rank, genre FROM movies INNER JOIN movies_genres ON movies.id = movies_genres.id WHERE title LIKE '%Harry Potter%' AND year >= '2005' GROUP BY title ORDER BY title;"
+		sql = "SELECT title, year, rank, genre FROM movies INNER JOIN movies_genres ON movies.id = movies_genres.id WHERE title LIKE '%H%' AND year >= '2005' GROUP BY title ORDER BY title;"
 
 		# Now let's fetch our result set and load it into a pandas dataframe
 		df = pd.read_sql_query(sql, conn)
