@@ -15,7 +15,7 @@ class CSV2DB:
     '''
 
     # Debug variable for running function stand-alone
-    debug = 1
+    debug = 0
 
     def csvtodb(self):
         

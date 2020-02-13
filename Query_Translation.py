@@ -24,25 +24,25 @@ class Query_Translation:
 
 
 		#base string for query, going to find all items that match the user query 
-		base_query_string = "SELECT * from" 
+		base_query_string = "SELECT " 
 		#fake valid query, would need to be assigned after query validation
-		validated_query = 'title,year title "10 days in a nudist camp" year "1952"'
+		validated_query = 'title,year,first_name,rank title "h" year "1952"'
 		# recall: query syntax - see Query_Syntax.txt 
 		#Breaking query into an array 
 		query_elements = shlex.split(validated_query, posix=False) # should get ['title,data' 'title' '10 days...',year,1952]
 
 
 		# Getting list of return fields 
-		return_fields = query_elements[0]
-		return_fields = shlex.split(return_fields, posix=False) #may be useful, may delete or pass to return statement logic
-
+		return_fields = str(query_elements[0])
+		return_fields = return_fields.split(",") #may be useful, may delete or pass to return statement logic
+		#print(return_fields)
 		#Creating list of data fields from csv files: Generalize this??
 
 		#CSV files: actors, movies, movie_genres, roles
-		movies_data_fields = pd.from_csv("movies.csv").columns.tolist()
-		actors_data_fields = pd.from_csv("actors.csv").columns.tolist()
-		movie_genre_data_fields = pd.from_csv("movie_genres.csv").columns.tolist()
-		roles_data_fields = pd.from_csv("roles.csv").columns.tolist()
+		movies_data_fields = pd.read_csv("movies.csv", header=0, index_col=False, encoding="ISO-8859-1").columns.tolist()
+		actors_data_fields = pd.read_csv("actors.csv", header=0, index_col=False, encoding="ISO-8859-1").columns.tolist()
+		movie_genre_data_fields = pd.read_csv("movies_genres.csv", header=0, index_col=False, encoding="ISO-8859-1").columns.tolist()
+		roles_data_fields = pd.read_csv("roles.csv", header=0, index_col=False, encoding="ISO-8859-1").columns.tolist()
 
 		del query_elements[0] # first element of array are return fields, not needed for sql command
 
@@ -65,49 +65,52 @@ class Query_Translation:
 			temp = temp[1:-1] 
 			query_value_fields[count] = temp
 			count += 1
-
+		#print(query_data_fields)
 		## IDEA: for each item create the sql statement then execute via pandas to make a Df. 
 		#Append each dataframe to a list to make a list of DF's. Then concatenate the DF's.
 		data_frames = list(())
 		# #build sql query string from base wrt each database as necessary, then execute
 		count2 = 0 # keep track of index
-		for item in query_data_fields:
-			#base string for query, going to find all items that match the user query (the one piece of it) 
-			base_query_string = "SELECT * from"
+		tables_pulling_from = list(())#create list of foreign keys to match on
+		tables = list(())
 
-			# Determine which database the field is, then create sql command 
-			if item in actors_data_fields:
-				base_query_string += "actors WHERE " + str(item) + " LIKE '" + str(query_value_fields[count2]) + "';"
+		for item in return_fields:
+			base_query_string += str(item) + ", "
+		base_query_string = base_query_string[:-2]
 
-			elif item in movie_genre_data_fields:
-				base_query_string += "movie_genres WHERE " + str(item) + " LIKE '" + str(query_value_fields[count2]) + "';"
 
-			elif item in roles_data_fields:
-				base_query_string += "roles_data_fields WHERE " + str(item) + " LIKE '" + str(query_value_fields[count2])+ "';"
+		base_query_string += " FROM movies "
 
-			#item is in movie data fields
-			else:
-				if item.upper() == "TITLE":
-					base_query_string += str(item) + " LIKE '%" + str(query_value_fields[count2]) +"%';"
-				elif item.upper() == "YEAR":
-					base_query_string += str(item) + " >= '" + str(query_value_fields[count2]) + "';"
+
+
+		base_query_string += "INNER JOIN movies_genres ON movies.id = movies_genres.id INNER JOIN actors ON " + \
+			 "roles.actor_id = actors.id INNER JOIN roles ON roles.movie_id = movies.id"
+
+		if (len(query_data_fields) > 0 and len(query_value_fields) > 0 and len(query_data_fields) == len(query_value_fields)) :
+			
+			base_query_string += " WHERE "
+			count = 0
+			while count < len(query_value_fields):
+				if str(query_data_fields[count]).upper() == "TITLE":
+					base_query_string +=   str(query_data_fields[count]) + " LIKE '%" + str(query_value_fields[count]) +"%' AND "
+				elif str(query_data_fields[count]).upper() == "YEAR":
+					base_query_string +=   str(query_data_fields[count]) + " >= '" + str(query_value_fields[count]) + "' AND "
 				else:
-					base_query_string += str(item) + " LIKE '" + str(query_value_fields[count2]) +"';"
+					base_query_string +=   str(query_data_fields[count]) + " LIKE '" + str(query_value_fields[count]) +"' AND "
+				count += 1
 
-			#Execute the created sql string, add that df to the list
+
+			base_query_string = base_query_string[:-4]
+			base_query_string += ";"
+			#print(base_query_string) 
+
+			# Execute the created sql string, add that df to the list
 			df = pd.read_sql_query(base_query_string,conn)
-			data_frames.append(df)
-
-			count2 += 1
-
-		#Now concatenate the list of df to one df
-		dfs = [df.set_index(['id','movie_id','actor_id']) for df in data_frames] 
-		pd.concat(dfs, axis=1, join='inner')
-		#			^				^						^
-		#	the df to be concatenated
-		#				concatenate by columns, not rows
-		#								would prevent duplicates, but taxing and not neccesary.
-
+			print(df.drop_duplicates())
+			return
+		else:
+			print("Query Syntax Error")
+			return
 
 
 self = Query_Translation()
