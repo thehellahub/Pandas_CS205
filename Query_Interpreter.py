@@ -5,9 +5,17 @@ import csv
 import os
 import pandas as pd
 
+# Debug variable for running function stand-alone
+standalone = 0
+# Debug variable for debug print statements
+debug = 1
+
 class Query_Interpreter:
 
-    def data_field_check(self, user_query):
+    def data_field_check(self, user_query, debug=debug):
+
+        if debug:
+            print("\n\n ** NOTICE: Query Query_Interpreter debug mode ON ** \n\n")
         
         #Instructions
         '''
@@ -38,13 +46,7 @@ class Query_Interpreter:
 
         all_our_data_fields = list(())
 
-        # pseudo code meow
-
-        '''
-        for each table in our list of tables, we're going to get the columns and then add them to a list
-
-        '''
-
+        # for each table in our list of tables, we're going to get the columns and then add them to a list
         for table in tables:
 
             # now we're referencing an individual table
@@ -60,10 +62,7 @@ class Query_Interpreter:
 
                 all_our_data_fields.append(column)
 
-
-
     # Now let's switch gears and get all the desired data fields
-
 
         # Breaking query into array, ie: ['title,first_name,last_name,gender,rank,year', 'title', '"Harry Potter"', 'date', '2008']
         query = shlex.split(user_query, posix=False)
@@ -72,11 +71,14 @@ class Query_Interpreter:
 
         desired_data = desired_data.split(",")  # ['title','first_name'.....] makes array of data wanted
 
+        if debug:
+            print("\n\n DEBUG: Desired data fields are: " + str(desired_data) + "\n\n")
+
         for element in desired_data:
 
             # If an element in the desired_data array is NOT in the all_out_data_fields array, return false!
             if element not in all_our_data_fields: 
-                print("Validation failed for data field: " + element)
+                print("\n\n Validation failed for data field: " + element)
                 return False
 
     # Check against the data fields the user is querying against.. ie: ['title', 'year']
@@ -97,23 +99,26 @@ class Query_Interpreter:
                 query_data_fields.append(element)
             count += 1
 
-        #print(query_data_fields)
+        if debug:
+            print("\n\n DEBUG: Data fields being queried against are: " + str(query_data_fields) + "\n\n")
+
 
         for element in query_data_fields:
 
             # If an element in the desired_data array is NOT in the all_out_data_fields array, return false!
             if element not in all_our_data_fields: 
-                print("Validation failedfor data field: " + element)
+                print("\n\n Validation failed for data field in: " + element)
                 return False
 
-        print("We passed the data field check!")
         return True
 
 
-# user_query = "title,first_name,last_name,gender,rank,year title 'Yeet' year '2008'"
+if standalone:
 
+    user_query = "title,first_name,last_name,gender,rank,year title 'Yeet' year '2008'"
+    self = Query_Interpreter() #instance of object
+    #call its main | also can be: Query_Interpreter.main(self=Query_Interpreter())
+    self.data_field_check(user_query=user_query)
 
-# self = Query_Interpreter() #instance of object
-# self.data_field_check(user_query=user_query)                #call its main | also can be: Query_Interpreter.main(self=Query_Interpreter())
 
 

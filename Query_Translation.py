@@ -1,35 +1,48 @@
 # Query Translation - take validated input query from user and translate it into sql syntax 
 
 
-#Author: Matthew Piatt
+#Author: Matthew Piatt & Nick Hella
 
 import sqlite3 as sq
 import pandas as pd
 import shlex
 from csvtodb import CSV2DB 
 
+# Debug variable for running function stand-alone
+standalone = 0
+# Debug variable for debug print statements
+debug = 1
+
 class Query_Translation:
 
-	def main(self):
+	def Query_Translation(self, conn=None, user_query=None, debug=debug):
 
-		CSV2DB.csvtodb(self)
+		if debug:
+			print("\n\n ** NOTICE: Query_Translation debug mode ON ** \n\n")
+			CSV2DB.csvtodb(self)
 	
 		try:
 			#Default to movies Db, pull from other database as needed
 			conn = sq.connect('imdb.db')
 		except Error as e:
-			print('failed to connect')
+			print('Failed to connect to the DB')
 			print(e)
-
 
 
 		#base string for query, going to find all items that match the user query 
 		base_query_string = "SELECT " 
 		#fake valid query, would need to be assigned after query validation
-		validated_query = 'title,year,first_name,rank title "h" year "1952"'
+
+		if debug:
+
+			if user_query == None:
+				user_query = 'title,year,first_name,last_name,rank title "h" year "1952"'
+			
+			print("\n\n DEBUG: User query is: " + str(user_query) + "\n\n")
+		
 		# recall: query syntax - see Query_Syntax.txt 
 		#Breaking query into an array 
-		query_elements = shlex.split(validated_query, posix=False) # should get ['title,data' 'title' '10 days...',year,1952]
+		query_elements = shlex.split(user_query, posix=False) # should get ['title,data' 'title' '10 days...',year,1952]
 
 
 		# Getting list of return fields 
@@ -65,26 +78,14 @@ class Query_Translation:
 			temp = temp[1:-1] 
 			query_value_fields[count] = temp
 			count += 1
-		#print(query_data_fields)
-		## IDEA: for each item create the sql statement then execute via pandas to make a Df. 
-		#Append each dataframe to a list to make a list of DF's. Then concatenate the DF's.
-		data_frames = list(())
-		# #build sql query string from base wrt each database as necessary, then execute
-		count2 = 0 # keep track of index
-		tables_pulling_from = list(())#create list of foreign keys to match on
-		tables = list(())
 
 		for item in return_fields:
 			base_query_string += str(item) + ", "
 		base_query_string = base_query_string[:-2]
 
-
-		base_query_string += " FROM movies "
-
-
-
-		base_query_string += "INNER JOIN movies_genres ON movies.id = movies_genres.id INNER JOIN actors ON " + \
-			 "roles.actor_id = actors.id INNER JOIN roles ON roles.movie_id = movies.id"
+		base_query_string += " FROM movies " + \
+				"INNER JOIN movies_genres ON movies.id = movies_genres.id INNER JOIN actors ON " + \
+			 	"roles.actor_id = actors.id INNER JOIN roles ON roles.movie_id = movies.id"
 
 		if (len(query_data_fields) > 0 and len(query_value_fields) > 0 and len(query_data_fields) == len(query_value_fields)) :
 			
@@ -102,30 +103,30 @@ class Query_Translation:
 
 			base_query_string = base_query_string[:-4]
 			base_query_string += ";"
-			#print(base_query_string) 
+			sql_query = base_query_string
+
+			if debug:
+				print("\n DEBUG: SQl query created in Query_Translation.py: \n")
+				print(sql_query)
 
 			# Execute the created sql string, add that df to the list
-			df = pd.read_sql_query(base_query_string,conn)
-			print(df.drop_duplicates())
-			return
+			df = pd.read_sql_query(sql_query,conn)
+			df = df.drop_duplicates()
+
+			if 'title' in return_fields:
+				df = df.drop_duplicates(keep="first", subset='title')
+
+			if debug:
+				print("\n DEBUG: Dataframe returning from Query_Translation.py: \n")
+				print(df.to_string(index=False) + "\n\n")
+				#print("\n\n")
+			return df
 		else:
 			print("Query Syntax Error")
 			return
 
+if standalone:
+	self = Query_Translation()
+	self.Query_Translation()
 
-self = Query_Translation()
-self.main()
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
+#EOF

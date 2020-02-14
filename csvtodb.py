@@ -6,6 +6,11 @@ import os
 import sys
 import ast
 
+# Debug variable for running function stand-alone
+standalone = 0
+# Debug variable for debug print statements
+debug = 0
+
 class CSV2DB:
     '''
 
@@ -14,10 +19,10 @@ class CSV2DB:
 
     '''
 
-    # Debug variable for running function stand-alone
-    debug = 0
+    def csvtodb(self, debug=debug):
 
-    def csvtodb(self):
+        if debug:
+            print("\n\n ** NOTICE: csvtodb debug mode ON ** \n\n")
         
         # get list of csv files in directory
         extension = 'csv'
@@ -56,8 +61,9 @@ class CSV2DB:
                 sys.exit()
             csv_columns = df.columns.tolist()
 
-            if CSV2DB.debug:
-                print(csv_columns)
+            if debug:
+                print("\n\n DEBUG: CSV Columns are:")
+                print(str(csv_columns) + "\n\n")
 
 
             for column in csv_columns:
@@ -145,9 +151,8 @@ class CSV2DB:
                         return
 
 
-        if CSV2DB.debug == 1:
+        if standalone:
 
-            print("\n\n Names of tables in the db: ")
 
             # Let's see the tables that are available in our database..
             sql = "SELECT name as 'Tables' FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
@@ -156,7 +161,8 @@ class CSV2DB:
             df = pd.read_sql_query(sql, conn)
 
             # Printing the results... (the tables)
-            print(df)
+            print("\n\n DEBUG: Names of tables in the db: ")
+            print(str(df) + "\n\n")
 
             tables = df['Tables'].tolist()
 
@@ -168,28 +174,24 @@ class CSV2DB:
                 # Now let's fetch our result set and load it into a pandas dataframe
                 df = pd.read_sql_query(sql, conn)
 
-                print("Length of table: " + str(table) + " is:")
+                print("\n\n DEBUG: Length of table: " + str(table) + " is:")
+                print(str(len(df)) + "\n\n")
 
-                # Printing the results... (the tables)
-                print(len(df))
-
-
-            
+            # Testing a sample query:
             sql = "SELECT title, year, rank, genre FROM movies INNER JOIN movies_genres ON movies.id = movies_genres.id WHERE title LIKE '%Dalmatians%' GROUP BY title ORDER BY title;"
 
             # Now let's fetch our result set and load it into a pandas dataframe
             df = pd.read_sql_query(sql, conn)
 
-            # Printing the results...
+            print("\n\n DEBUG: Testing sample Query: " + str(sql))
+            print("\n\n DEBUG: Returning result set of sample query: ")
             print(df)
-
-
 
         conn.commit()
         conn.close()
 
-
-self = CSV2DB()
-self.csvtodb()
+if standalone:
+    self = CSV2DB()
+    self.csvtodb()
 
 #EOF
