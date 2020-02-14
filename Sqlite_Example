@@ -1,0 +1,142 @@
+import sqlite3
+import pandas as pd
+import os
+
+'''
+Author: Nick Hella
+
+SQLite is an in-process library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine. 
+The code for SQLite is in the public domain and is thus free for use for any purpose, commercial or private. 
+SQLite is the most widely deployed database in the world with more applications than we can count, including several high-profile projects.
+
+This file will demonstrate some of the simple queries one can use with our data sets.
+
+
+More documentation on sqlite3 is available on their website:
+
+	https://www.sqlite.org/docs.html
+
+
+To run this file, (1.) open a terminal	(2.) move into the directory of this file 	(3.) run the command below
+
+	python Sqlite_Example.py
+
+Note, you made need to specify python3 instead of python if you have python2.x by default
+
+'''
+
+class Sqlite_Example:
+
+	def main(self):
+
+		print("Loading CSVs into Sqlite DB...")
+
+		# Creating a sqlite db from all our CSV files
+		os.system("csvs-to-sqlite *.csv imdb.db")
+
+		print("Done!")
+
+		# Creating a connection object to our Sqlite IMDB database
+		conn = sqlite3.connect("imdb.db") # Reading in our sqlite3 db
+
+		# Let's see the tables that are available in our database..
+		sql = "SELECT name as 'Tables' FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
+
+		# Now let's fetch our result set and load it into a pandas dataframe
+		df = pd.read_sql_query(sql, conn)
+
+		# Printing the results...
+		print(df)
+
+		# Let's write a query to grab the movies that contain the string "Harry Potter" in the title
+		sql = "SELECT * FROM movies WHERE title LIKE '%Harry Potter%';"
+
+		# ^^^
+		# Using LIKE, IN, BETWEEN, and wildcards to match multiple values in SQL:
+		# http://2015.padjo.org/tutorials/sql-basics/fuzzy-matching-like-in-where/
+
+		# Now let's fetch our result set and load it into a pandas dataframe
+		df = pd.read_sql_query(sql, conn)
+
+		# Printing the results...
+		print(df)
+
+		# This should return the following:
+
+		'''
+		            id      name   														year  rank
+			129731  139650	Harry Potter and the Chamber of Secrets  					2002   7.3
+			129732  139651  Harry Potter and the Chamber of Secrets (2002/II)  			2002   NaN
+			129733  139652  Harry Potter and the Goblet of Fire  						2005   NaN
+			129734  139653  Harry Potter and the Half-Blood Prince  					2008   NaN
+			129735  139654  Harry Potter and the Order of the Phoenix  					2007   NaN
+			129736  139655  Harry Potter and the Prisoner of Azkaban  					2004   7.7
+			129737  139656  Harry Potter and the Prisoner of Azkaban (2004...  			2004   NaN
+			129738  139657  Harry Potter and the Sorcerer's Stone  						2001   7.3
+			129739  139658  Harry Potter and the Sorcerer's Stone (2001/II)  			2001   NaN
+			129740  139659  Harry Potter und die Kammer des Schreckens - D...  			2002   NaN
+			129741  139660  Harry Potter: Behind the Magic  							2001   NaN
+			129742  139661  Harry Potter: Quidditch World Cup  							2003   NaN
+			129743  139662  Harry Potter: Witchcraft Repackaged  						2001   NaN
+			152927  164234  J.K. Rowling: Harry Potter and Me  							2002   NaN
+			187365  200348  Magical World of Harry Potter: The Unauthorize...  			2000   NaN
+
+			  ^ This first column is just an index column. Not actual part of the data.
+
+		'''
+
+		# Ok, now let's try being a bit more specific...
+
+		# Let's look in our data frame for movies with titles that contain the string "Harry Potter".. 
+		# And now  let's also look for the "Harry Potter" movies in this resultset where the year >= 2005
+		
+		sql = "SELECT * FROM movies WHERE title LIKE '%Harry Potter%' AND year >= '2005';"
+
+		# Now let's fetch our result set and load it into a pandas dataframe
+		df = pd.read_sql_query(sql, conn)
+
+		# Printing the results...
+		print(df)
+
+		# This should return the following:
+
+		'''
+		            id      name   														year  rank
+			129733  139652  Harry Potter and the Goblet of Fire  						2005   NaN
+			129734  139653  Harry Potter and the Half-Blood Prince  					2008   NaN
+			129735  139654  Harry Potter and the Order of the Phoenix  					2007   NaN
+
+
+		'''
+
+		# That was cool! Now let's try combining multiple tables...
+		# Let's try pulling in the genre from our last query
+
+		sql = "SELECT title, year, rank, genre FROM movies INNER JOIN movies_genres ON movies.id = movies_genres.id WHERE title LIKE '%H%' AND year >= '2005' GROUP BY title ORDER BY title;"
+
+		# Now let's fetch our result set and load it into a pandas dataframe
+		df = pd.read_sql_query(sql, conn)
+
+		# Printing the results...
+		print(df)
+
+		# This should return the following:
+
+		'''
+		            name   														year  rank	genre
+			0  		Harry Potter and the Goblet of Fire  						2005   NaN	Adventure
+			1  		Harry Potter and the Half-Blood Prince  					2008   NaN	Action
+			2  		Harry Potter and the Order of the Phoenix  					2007   NaN	Adventure
+
+
+		'''
+		
+		# Ugh, such good movies.. 
+		os.remove('imdb.db')
+		return
+
+
+self = Sqlite_Example()
+self.main()
+
+# EOF

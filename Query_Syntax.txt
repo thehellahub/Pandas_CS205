@@ -1,0 +1,22 @@
+Query semantics:
+
+title title "Harry Potter" year "2008"
+                                  ^ Value we're going to look for, against the column we're going to query on
+                            ^ Column were going to query on
+                ^ Value we're going to look for, against the column we're going to query on
+       ^ Column were going to query on
+^ Desired data field we want to return       
+
+
+This would return:
+  Harry Potter and the Half-Blood Prince  		   
+
+
+Let's say we want to see more than one data field... Our query might look like:
+
+title,date title "Harry Potter" year 2008
+
+  Harry Potter and the Half-Blood Prince  				2008   
+
+	
+title,date,genre title "Harry Potter"

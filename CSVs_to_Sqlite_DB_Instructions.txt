@@ -1,0 +1,52 @@
+Converting one or more CSVs to a Sqlite DB
+
+Author: Nick Hella
+
+
+This document will demonstrate how to take one or more CSV files and convert them into a sqlite database. 
+
+SQLite is an in-process library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine. 
+The code for SQLite is in the public domain and is thus free for use for any purpose, commercial or private. 
+SQLite is the most widely deployed database in the world with more applications than we can count, including several high-profile projects.
+
+
+First, ensure that you have installed the Anaconda package. 
+
+Documentation on how to do this is available - please read Installing_Python_and_Sqlite_via_Anaconda.txt
+
+First, enter the following command into your terminal:
+
+	pip install csvs-to-sqlite
+
+
+When that has finished, confirm that it has successfully installed by entering the following into your temrinal:
+
+	csvs-to-sqlite
+
+
+If you see something like the following, then it's been installed successfully:
+
+	Usage: csvs-to-sqlite [OPTIONS] PATHS... DBNAME
+	Try "csvs-to-sqlite --help" for help.
+
+	Error: Missing argument "PATHS...". 
+
+
+Ok, so now we want to move into our project directory. For me, I would enter the following command:
+
+	cd ~/Documents/CS_205/PANDAS_CS205
+
+
+To convert your CSV files into a singular Sqlite db, enter the following command
+
+	csvs-to-sqlite <csv_file_1> <csv_file_2> <csv_file_3> ... <csv_file_N> <NAME_OF_DB>
+
+
+NOTE: If you want to just grab all the CSV files in your directory and chuck them into a Sqlite DB, you can uses regexs:
+
+	csvs-to-sqlite *.csv <name_of_db>
+
+
+For me, I entered the following:
+
+	csvs_to_sqlite *.csv imdb.db
