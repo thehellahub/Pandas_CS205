@@ -46,6 +46,8 @@ class Query_Translation:
 
 		# Getting list of return fields 
 		return_fields = str(query_elements[0])
+		if return_fields == "*":
+			return_fields = ["id","title","year","rank"]
 		return_fields = return_fields.split(",") #may be useful, may delete or pass to return statement logic
 		#print(return_fields)
 		#Creating list of data fields from csv files: Generalize this??

@@ -87,6 +87,10 @@ Query example:
 	  Harry Potter and the Half-Blood Prince 
 
 	type 'man' for user manual.
+	
+	To search all feilds use the keyword '*' at the start of your query
+	
+	Example: * Harry Potter
 
 
 Fields you can Query against:

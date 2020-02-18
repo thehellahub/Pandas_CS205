@@ -124,10 +124,10 @@ Query Example (Sytax Explanation):
 	This would return:
 	  Harry Potter and the Half-Blood Prince 
 
-'''	
+	
 	print(manual_string)
 	return
-
+'''
 self = Example_Program()
 self.main()
 

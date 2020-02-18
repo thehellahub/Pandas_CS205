@@ -201,6 +201,65 @@ class Query_Interpreter:
 
         return True
 
+    def data_comma_check(self, user_query, conn=None, debug=debug):
+
+        if debug:
+            print("\n\n ** NOTICE: Query Query_Interpreter debug mode ON ** \n\n")
+
+        # Instructions
+        '''
+        Query example:
+            [title,first_name,last_name,gender,rank,year] title "Harry Potter" year "2008"
+                                                                                      ^ Value we're going to look for
+                                                                                ^ Column were going to query on
+                                                                    ^ Value we're going to look for
+                                                           ^ Column were going to query on
+            ^ Desired data field we want to return
+            This would return:
+              Harry Potter and the Half-Blood Prince
+            type 'man' for user manual.
+        '''
+
+        # Creating a connection object to our Sqlite IMDB database
+        if standalone:
+            conn = sqlite3.connect("imdb.db")  # Reading in our sqlite3 db
+
+        # Let's get all the data fields in our database
+        # First get tables in database...
+        sql = "SELECT name as 'Tables' FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
+
+        # Take our tables and load it into a pandas dataframe
+        df = pd.read_sql_query(sql, conn)
+        tables = df['Tables'].tolist()
+
+        all_our_data_fields = list(())
+
+        # for each table in our list of tables, we're going to get the columns and then add them to a list
+        for table in tables:
+
+            # now we're referencing an individual table
+            # let's get the columns!
+
+            sql = "SELECT * FROM " + str(table) + ";"
+
+            df = pd.read_sql_query(sql, conn)
+
+            columns = df.columns.tolist()
+
+            for column in columns:
+                all_our_data_fields.append(column)
+
+        # Now let's switch gears and get all the desired data fields
+
+        # Breaking query into array, ie: ['title,first_name,last_name,gender,rank,year', 'title', '"Harry Potter"', 'date', '2008']
+        query = shlex.split(user_query, posix=False)
+
+        desired_data = query[0]  # ['title,first_name,last_name,gender,rank,year']
+
+        if desired_data[-1] == ",":
+            del desired_data[-1]
+        return desired_data
+
 
 if standalone:
 
