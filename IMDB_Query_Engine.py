@@ -88,6 +88,35 @@ Query example:
 
 	type 'man' for user manual.
 
+
+Fields you can Query against:
+
+	Queries for movies:
+
+		title - the title of the movie
+
+		year - the year the movie was made
+
+		rank - the rating of the movie out of 10
+
+	Queries for actors:
+
+		first_name - first name of the actor
+
+		last_name - last name of the actor
+
+		gender - the gender of the actor
+
+	Queries for genres:
+
+		genere - the genere/catagory the movie falls into
+
+	Queries for roles:
+
+		role - the role/charater the actor plays
+
+You can Mix & Match any of the fields!!!
+
 '''
 
 		# Print the example query syntax
@@ -140,6 +169,54 @@ Query example:
 		except Exception as e:
 			pass
 		sys.exit(0)
+
+	def help(self): 
+		help_str = '''
+[Instructions]
+Query example:
+
+	title,year,genre title "Harry Potter" year "2008"
+	                                  				^ Value we're going to look for
+	                            			^ Column were going to query on
+	                  			^ Value we're going to look for
+	       				^ Column were going to query on
+	^ Desired data field(s) we want to return       
+
+	This would return:
+	  Harry Potter and the Half-Blood Prince 
+
+Fields you can Query against:
+
+	Queries for movies:
+
+		title - the title of the movie
+
+		year - the year the movie was made
+
+		rank - the rating of the movie out of 10
+
+	Queries for actors:
+
+		first_name - first name of the actor
+
+		last_name - last name of the actor
+
+		gender - the gender of the actor
+
+	Queries for genres:
+		genere - the genere/catagory of the movie 
+
+	Queries for roles:
+
+		role - the role/charater the actor plays
+
+You can Mix & Match any of the fields!!!
+ 
+'''
+		# Print the help messange
+		print(help_str)
+
+		return
 
 
 	def Exception_Handler():
