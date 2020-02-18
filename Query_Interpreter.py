@@ -8,11 +8,11 @@ import pandas as pd
 # Debug variable for running function stand-alone
 standalone = 0
 # Debug variable for debug print statements
-debug = 1
+debug = 0
 
 class Query_Interpreter:
 
-    def data_field_check(self, user_query, debug=debug):
+    def data_field_check(self, user_query, conn=None,debug=debug):
 
         if debug:
             print("\n\n ** NOTICE: Query Query_Interpreter debug mode ON ** \n\n")
@@ -34,7 +34,8 @@ class Query_Interpreter:
 
 
         # Creating a connection object to our Sqlite IMDB database
-        conn = sqlite3.connect("imdb.db") # Reading in our sqlite3 db
+        if standalone:
+            conn = sqlite3.connect("imdb.db") # Reading in our sqlite3 db
 
     # Let's get all the data fields in our database
         # First get tables in database...
@@ -108,6 +109,94 @@ class Query_Interpreter:
             # If an element in the desired_data array is NOT in the all_out_data_fields array, return false!
             if element not in all_our_data_fields: 
                 print("\n\n Validation failed for data field in: " + element)
+                return False
+
+        return True
+
+    def data_value_check(self, user_query, conn=None,debug=debug):
+
+        if debug:
+            print("\n\n ** NOTICE: Query Query_Interpreter debug mode ON ** \n\n")
+        
+        #Instructions
+        '''
+        Query example:
+            [title,first_name,last_name,gender,rank,year] title "Harry Potter" year "2008"
+                                                                                      ^ Value we're going to look for
+                                                                                ^ Column were going to query on
+                                                                    ^ Value we're going to look for
+                                                           ^ Column were going to query on
+            ^ Desired data field we want to return
+            This would return:
+              Harry Potter and the Half-Blood Prince
+            type 'man' for user manual.
+        '''
+
+
+
+        # Creating a connection object to our Sqlite IMDB database
+        if standalone:
+            conn = sqlite3.connect("imdb.db") # Reading in our sqlite3 db
+
+    # Let's get all the data fields in our database
+        # First get tables in database...
+        sql = "SELECT name as 'Tables' FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
+
+        # Take our tables and load it into a pandas dataframe
+        df = pd.read_sql_query(sql, conn)
+        tables = df['Tables'].tolist()
+
+        all_our_data_fields = list(())
+
+        # for each table in our list of tables, we're going to get the columns and then add them to a list
+        for table in tables:
+
+            # now we're referencing an individual table
+            # let's get the columns!
+
+            sql = "SELECT * FROM " + str(table) + ";"
+
+            df = pd.read_sql_query(sql, conn)
+
+            columns = df.columns.tolist()
+
+            for column in columns:
+
+                all_our_data_fields.append(column)
+
+    # Now let's switch gears and get all the desired data fields
+
+        # Breaking query into array, ie: ['title,first_name,last_name,gender,rank,year', 'title', '"Harry Potter"', 'date', '2008']
+        query = shlex.split(user_query, posix=False)
+
+        # Erasing the desired data from the query list
+        del query[0]
+
+        query_data_values = list(())    # Loading up a list of the fields we're going to query against.             ie: [title,year]
+
+
+        # recall, query is: [title,first_name,last_name,gender,rank,year] title "Harry Potter" year "2008"
+        # then we used "del query[0]" to get rid of what's in the brackets
+        # Now our query string looks something like: title "Harry Potter" year "2008"
+        
+        # Loading up the lists
+        count = 1
+        for element in query:
+            if count % 2 == 0:  # if count is an odd number as we iterate through the query
+                query_data_values.append(element)
+            count += 1
+
+        if debug:
+            print("\n\n DEBUG: Data fields being queried against are: " + str(query_data_values) + "\n\n")
+
+
+        for element in query_data_values:
+
+            if element[0] != "\"": # gets first char in string https://guide.freecodecamp.org/python/is-there-a-way-to-substring-a-string-in-python/
+                print("\n\n QUERY ERROR: No beginning quotes around " + element)
+                return False
+            if element[-1] != "\"": # gets last char in string https://www.pythoncentral.io/how-to-get-a-substring-from-a-string-in-python-slicing-strings/
+                print("\n\n QUERY ERROR: No ending quotes around " + element)
                 return False
 
         return True

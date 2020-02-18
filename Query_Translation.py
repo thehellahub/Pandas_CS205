@@ -1,6 +1,5 @@
 # Query Translation - take validated input query from user and translate it into sql syntax 
 
-
 #Author: Matthew Piatt & Nick Hella
 
 import sqlite3 as sq
@@ -11,20 +10,20 @@ from csvtodb import CSV2DB
 # Debug variable for running function stand-alone
 standalone = 0
 # Debug variable for debug print statements
-debug = 1
+debug = 0
 
 class Query_Translation:
 
 	def Query_Translation(self, conn=None, user_query=None, debug=debug):
 
-		if debug:
+		if standalone:
 			print("\n\n ** NOTICE: Query_Translation debug mode ON ** \n\n")
-			CSV2DB.csvtodb(self)
+			CSV2DB.go(self)
 	
 		try:
 			#Default to movies Db, pull from other database as needed
-			conn = sq.connect('imdb.db')
-		except Error as e:
+			conn = sqlite3.connect("imdb.db")
+		except Exception as e:
 			print('Failed to connect to the DB')
 			print(e)
 
@@ -99,7 +98,6 @@ class Query_Translation:
 				else:
 					base_query_string +=   str(query_data_fields[count]) + " LIKE '" + str(query_value_fields[count]) +"' AND "
 				count += 1
-
 
 			base_query_string = base_query_string[:-4]
 			base_query_string += ";"
