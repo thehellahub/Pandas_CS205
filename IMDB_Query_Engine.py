@@ -171,8 +171,12 @@ You can Mix & Match any of the fields!!!
 							# Print the result set
 							print("\n\n Results: \n\n")
 							print(df.to_string(index=False))
+							print("\n Length: " + str(len(df)))
 						if len(df) == 0:
 							print("\n\n No results found! \n\n")
+
+					else:
+						print("\n\n Data field validation check failed.")
 
 			else:
 				pass
@@ -232,11 +236,6 @@ You can Mix & Match any of the fields!!!
 		print(help_str)
 
 		return
-
-
-	def Exception_Handler():
-		print("Exception Handler function called")
-
 
 
 debug = 0

@@ -4,6 +4,7 @@ import sqlite3
 import csv
 import os
 import pandas as pd
+from ErrorHandler import error_handler
 
 # Debug variable for running function stand-alone
 standalone = 0
@@ -12,6 +13,7 @@ debug = 0
 
 class Query_Interpreter:
 
+    @error_handler(debug,"data_field_check")
     def data_field_check(self, user_query, conn=None,debug=debug):
 
         if debug:
@@ -45,6 +47,11 @@ class Query_Interpreter:
         df = pd.read_sql_query(sql, conn)
         tables = df['Tables'].tolist()
 
+
+        if debug:
+            print("\n\n DEBUG: Tables in our DB are: ")
+            print(tables)
+
         all_our_data_fields = list(())
 
         # for each table in our list of tables, we're going to get the columns and then add them to a list
@@ -63,6 +70,10 @@ class Query_Interpreter:
 
                 all_our_data_fields.append(column)
 
+        if debug:
+            print("\n\n DEBUG: All our data fields in the db are: ")
+            print(all_our_data_fields)
+
     # Now let's switch gears and get all the desired data fields
 
         # Breaking query into array, ie: ['title,first_name,last_name,gender,rank,year', 'title', '"Harry Potter"', 'date', '2008']
@@ -78,8 +89,8 @@ class Query_Interpreter:
 
         for element in desired_data:
 
-            # If an element in the desired_data array is NOT in the all_out_data_fields array, return false!
-            if element not in all_our_data_fields: 
+            # If an element in the desired_data array is NOT in the all_our_data_fields array, return false!
+            if str(element).strip() not in all_our_data_fields: 
                 print("\n\n Validation failed for data field: " + element)
                 return False
 
@@ -106,13 +117,14 @@ class Query_Interpreter:
 
 
         for element in query_data_fields:
-            # If an element in the desired_data array is NOT in the all_out_data_fields array, return false!
+            # If an element in the desired_data array is NOT in the all_our_data_fields array, return false!
             if element not in all_our_data_fields: 
                 print("\n\n Validation failed for data field in: " + element)
                 return False
 
         return True
 
+    @error_handler(debug,"data_value_check")
     def data_value_check(self, user_query, conn=None,debug=debug):
 
         if debug:
@@ -201,6 +213,7 @@ class Query_Interpreter:
 
         return True
 
+    @error_handler(debug,"data_comma_check")
     def data_comma_check(self, user_query, conn=None, debug=debug):
 
         if debug:
@@ -233,6 +246,7 @@ class Query_Interpreter:
 
         return user_query
 
+    @error_handler(debug,"data_star_check")
     def data_star_check(self, user_query, conn=None, debug=debug):
 
         if debug:
@@ -292,17 +306,19 @@ class Query_Interpreter:
 
         if (desired_data[0] == '*') and (len(desired_data) == 1):
 
-            print("\n\n DEBUG: STAR NOTATION DETECTED!")
-            desired_data = "title,year,rank,genre,role,first_name,last_name,gender"
+            if debug:
+                print("\n\n DEBUG: STAR NOTATION DETECTED!")
+
+            desired_data = "title,year,genre,rank,first_name,last_name,gender,role"
             query[0] = desired_data
             tmp = user_query[2:]
             tmp = desired_data + " " + tmp
-            print("\n\n DEBUG: User query being passed back from data_star_check function: " + str(tmp))
+
+            if debug:
+                print("\n\n DEBUG: User query being passed back from data_star_check function: " + str(tmp))
             return tmp
         else:
             return user_query
-
-
 
 
 if standalone:

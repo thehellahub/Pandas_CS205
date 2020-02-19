@@ -2,10 +2,11 @@
 
 #Author: Matthew Piatt & Nick Hella
 
-import sqlite3 as sq
+import sqlite3
 import pandas as pd
 import shlex
 from csvtodb import CSV2DB 
+from ErrorHandler import error_handler
 
 # Debug variable for running function stand-alone
 standalone = 0
@@ -14,6 +15,7 @@ debug = 0
 
 class Query_Translation:
 
+	@error_handler(debug,"Query_Translation")
 	def Query_Translation(self, conn=None, user_query=None, debug=debug):
 
 		if standalone:
@@ -46,7 +48,8 @@ class Query_Translation:
 		# Getting list of return fields 
 		return_fields = str(query_elements[0])
 		if return_fields == "*":
-			return_fields = ["title","year","rank","genre","role","first_name","last_name","gender"]
+			#return_fields = ["title","year","rank","genre","role","first_name","last_name","gender"]
+			return_fields = ["title","year","genre","rank","first_name","last_name","role","gender"]
 
 		return_fields = return_fields.split(",") #may be useful, may delete or pass to return statement logic
 		#print(return_fields)
@@ -87,7 +90,7 @@ class Query_Translation:
 				"INNER JOIN movies_genres ON movies.id = movies_genres.id INNER JOIN actors ON " + \
 			 	"roles.actor_id = actors.id INNER JOIN roles ON roles.movie_id = movies.id"
 
-		if (len(query_data_fields) > 0 and len(query_value_fields) > 0 and len(query_data_fields) == len(query_value_fields)) :
+		if ( (len(query_data_fields) > 0) and (len(query_value_fields) > 0) and (len(query_data_fields) == len(query_value_fields)) ) :
 			
 			base_query_string += " WHERE "
 			count = 0
@@ -120,8 +123,42 @@ class Query_Translation:
 				print(df.to_string(index=False) + "\n\n")
 				#print("\n\n")
 			return df
+
+		elif ( (len(query_data_fields) == 0) and (len(query_value_fields) == 0) ):
+
+			sql_query = base_query_string
+
+			# Execute the created sql string, add that df to the list
+			df = pd.read_sql_query(sql_query,conn)
+			df = df.drop_duplicates()
+
+			if 'title' in return_fields:
+				df = df.drop_duplicates(keep="first", subset='title')
+
+			if debug:
+				print("\n\n DEBUG: No query parameters defiend by user..")
+				print("\n DEBUG: SQl query created in Query_Translation.py: \n")
+				print(base_query_string)
+				print("\n\n DEBUG: length of query data fields list:")
+				print(len(query_data_fields))
+				print("\n\n DEBUG: length of query value fields list:")
+				print(len(query_value_fields))
+				print("\n DEBUG: Dataframe returning from Query_Translation.py: \n")
+				print(df.to_string(index=False) + "\n\n")
+
+			return df
 		else:
+
+			if debug:
+				print("\n DEBUG: SQl query created in Query_Translation.py: \n")
+				print(base_query_string)
+				print("\n\n DEBUG: length of query data fields list:")
+				print(len(query_data_fields))
+				print("\n\n DEBUG: length of query value fields list:")
+				print(len(query_value_fields))
+
 			print("Query Syntax Error")
+				
 			return
 
 if standalone:

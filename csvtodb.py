@@ -8,6 +8,8 @@ import ast
 import time
 from multiprocessing import Process
 from threading import Thread
+from Data_Sanitation import Data_Sanitation
+from ErrorHandler import error_handler
 
 # Debug variable for running function stand-alone
 standalone = 0
@@ -22,6 +24,7 @@ class CSV2DB:
 
     '''
 
+    @error_handler(debug,"csvtodb")
     def csvtodb(self, csvfile, conn, cur, debug=debug):
 
         if debug:
@@ -32,7 +35,7 @@ class CSV2DB:
 
         # iterate through csv list
 
-        table_name = csvfile[:-4]
+        table_name = csvfile[:-5]
 
         sql_string = "CREATE TABLE IF NOT EXISTS " + str(table_name).strip() + "("
 
@@ -71,11 +74,12 @@ class CSV2DB:
             print(sql_string)
 
         cur.execute(sql_string)
+        conn.commit()
 
     # Insert into tables
 
-        # Defining the table name as the CSV file without the .csv extension
-        table_name = csvfile[:-4]
+        # Defining the table name as the CSV file without the .csv2 extension
+        table_name = csvfile[:-5]
 
         # get the column names of the headers
         #df = pd.read_csv(str(csvfile), header=0, index_col=False, encoding="ISO-8859-1")
@@ -146,13 +150,14 @@ class CSV2DB:
 
         return
 
+    @error_handler(debug,"show_me_my_csvs")
     def show_me_my_csvs(self, debug=debug):
         
         if debug:
             print("\n\n ** NOTICE: show_me_my_csvs debug mode ON ** \n\n")
         
         # get list of csv files in directory
-        extension = 'csv'
+        extension = 'csv2'
         result = glob.glob('*.{}'.format(extension))
 
         if debug:
@@ -161,6 +166,17 @@ class CSV2DB:
 
         return result
 
+    @error_handler(debug,"show_me_my_csvs")
+    def delete_csv2_files(self,debug=debug):
+        # get list of csv files in directory
+        extension = 'csv2'
+        result = glob.glob('*.{}'.format(extension))
+
+        for csvfile in result:
+            os.remove(csvfile)
+        return
+
+    @error_handler(debug,"create_database")
     def create_database(debug=debug):
 
         # remove any previously existing db file
@@ -176,8 +192,20 @@ class CSV2DB:
 
         return conn,cur
 
+    @error_handler(debug,"delete_database")
+    def delete_database(self,debug=debug):
+        # remove the imdb.db file created
+        extension = '.db'
+        result = glob.glob('*.{}'.format(extension))
 
+        for _file in result:
+            os.remove(_file)
+        return
+
+    @error_handler(debug,"go")
     def go(self, debug=debug):
+
+        Data_Sanitation.sanitize(self,debug)
 
         result = CSV2DB.show_me_my_csvs(self,debug)
 
@@ -196,8 +224,6 @@ class CSV2DB:
 
         for csvfile in result:
 
-            conn,cur = CSV2DB.create_database(self)
-
             if debug:
                 print("Adding the following CSV to the DB: ")
                 print(csvfile)
@@ -214,6 +240,10 @@ class CSV2DB:
 
             CSV2DB.csvtodb(self,csvfile,conn,cur)
 
+        CSV2DB.delete_csv2_files(self,debug) # erasing the .csv2 files now that we've put their content in the db
+
+        # END OF FUNCTION
+        # DEBUG FOR STANDALONE RUNNING
         if standalone:
 
             time.sleep(3)
@@ -242,7 +272,7 @@ class CSV2DB:
                 print(str(len(df)) + "\n\n")
 
             # Testing a sample query:
-            sql = "SELECT title, year, rank, genre FROM movies INNER JOIN movies_genres ON movies.id = movies_genres.id WHERE title LIKE '%Dalmatians%' GROUP BY title ORDER BY title;"
+            sql = "SELECT title, year, rank, genre FROM movies INNER JOIN movies_genres ON movies.id = movies_genres.id WHERE title LIKE '%D%' GROUP BY title ORDER BY title;"
 
             # Now let's fetch our result set and load it into a pandas dataframe
             df = pd.read_sql_query(sql, conn)
@@ -251,8 +281,10 @@ class CSV2DB:
             print("\n\n DEBUG: Returning result set of sample query: ")
             print(df)
 
-        return conn
+            # remove the imdb.db file created
+            CSV2DB.delete_database(self,debug)
 
+        return conn
 
 
 if standalone:
