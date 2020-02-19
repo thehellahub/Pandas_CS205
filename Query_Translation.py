@@ -27,7 +27,6 @@ class Query_Translation:
 			print('Failed to connect to the DB')
 			print(e)
 
-
 		#base string for query, going to find all items that match the user query 
 		base_query_string = "SELECT " 
 		#fake valid query, would need to be assigned after query validation
@@ -57,7 +56,6 @@ class Query_Translation:
 		roles_data_fields = pd.read_csv("roles.csv", header=0, index_col=False, encoding="ISO-8859-1").columns.tolist()
 
 		del query_elements[0] # first element of array are return fields, not needed for sql command
-
 
 		query_data_fields = list(())    # Loading up a list of the fields we're going to query against.             ie: [title,year]
 		query_value_fields = list(())   # loading up a list of the values for fields to query against
