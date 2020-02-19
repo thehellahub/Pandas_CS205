@@ -1,15 +1,18 @@
 from csvtodb import CSV2DB
 from Query_Interpreter import Query_Interpreter
 from Query_Translation import Query_Translation
+from ErrorHandler import error_handler
 
 import time
 import sys
 import os
 
+debug = 0
 
 class IMDB_Query_Engine:
 
 
+	@error_handler(debug,"IMDB_Query_Engine.run")
 	def run(self):
 
 		# Intro line
@@ -145,9 +148,10 @@ You can Mix & Match any of the fields!!!
 					self.help()
 				elif str(query).strip() == 'man':
 					self.help()
+				
 				else:
-					# Check to make sure that the query passes data field validation testing
-					#@Exception_Handler
+					if str(query).strip() == 'show all':
+						query = '*'
 
 					query = Query_Interpreter.data_star_check(self,query,conn,debug)
 
@@ -181,6 +185,7 @@ You can Mix & Match any of the fields!!!
 			else:
 				pass
 
+	@error_handler(debug,"IMDB_Query_Engine.exit")
 	def exit(self,conn):
 		conn.close()
 		try:
@@ -189,6 +194,7 @@ You can Mix & Match any of the fields!!!
 			pass
 		sys.exit(0)
 
+	@error_handler(debug,"IMDB_Query_Engine.help")
 	def help(self): 
 		help_str = '''
 [Instructions]
@@ -238,7 +244,6 @@ You can Mix & Match any of the fields!!!
 		return
 
 
-debug = 0
 for element in list(sys.argv):
 	if str(element).strip() == "-debug":
 		debug = 1

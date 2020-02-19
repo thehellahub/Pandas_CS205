@@ -41,13 +41,18 @@ class ErrorHandlerContext:
 
 		if (exc_type is None and exc_value is None and traceback_ is None):
 			return
+
+		if str(exc_type).strip() == "<class 'SystemExit'>":
+			print("Exit command detected. Removing .CSV2 files and .db file if exists.. \n\n")
+			self.remove_csv2_files_and_db_file()
+			return
 			
 		if str(punchline).strip() == "KeyboardInterrupt":
 			print("\n\n SIGKILL Detected. Removing .CSV2 files and .db file if exists.. \n\n")
 			self.remove_csv2_files_and_db_file()
 			sys.exit()
 			return
-			
+
 		else:
 
 			exc_lines = traceback.format_exc().split("\n")
@@ -57,14 +62,13 @@ class ErrorHandlerContext:
 				punchline = None
 
 			print("\n\n ERROR DETECTED: " + \
-				" \nFUNCTION: " + str(self.function_name) + \
-				" \nERROR TRACEBACK: " + "\n\n" + str(traceback_) + "\n\n" + \
-				" \nEXC TYPE: " + "\n\n" + str(exc_type) + "\n\n" + \
-				" \nEXC VALUE: " + "\n\n" + str(exc_value) + "\n\n" + \
-				" \nPUNCHLINE: " + "\n\n" + str(punchline) + "\n\n")
+				" \nFUNCTION: " + str(self.function_name) 	+ \
+				" \nEXC TYPE: " + "\n\n" + str(exc_type) 	+ \
+				" \nEXC VALUE: " + "\n\n" + str(exc_value) 	+ \
+				" \nPUNCHLINE: " + "\n\n" + str(punchline) 	+ \
+				" \nERROR TRACEBACK: " + "\n\n" + str(traceback_) + "\n" + \
 
 			print("\n\n Removing .csv2 files and .db file if exists")
-			
 			self.remove_csv2_files_and_db_file()
 
 		return
