@@ -6,6 +6,7 @@ from ErrorHandler import error_handler
 import time
 import sys
 import os
+import glob
 
 debug = 0
 
@@ -67,11 +68,22 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 			print("Hit enter to continue")
 			input()
 
+		extension = '.db'
+		result = glob.glob('*.{}'.format(extension))
+		if len(result) == 1:
+			print("\nDatabase present")
+		else:
+			print("Would you like to create the database? Enter 'load data' to continue, 'exit' to exit:")
+			user_command = input()
+			if user_command.lower() == "load data":
+				conn = self.load()
+			elif user_command.lower() =="exit":
+				self.exit()
 
-		# Load the IMDB database and create connection object to database
-		print("Loading CSVs into Sqlite DB...")
-		conn = CSV2DB.go(self, debug)
-		print("DB creation successful!")
+		# # Load the IMDB database and create connection object to database
+		# print("Loading CSVs into Sqlite DB...")
+		# conn = CSV2DB.go(self, debug)
+		# print("DB creation successful!")
 
 		# Provide example of query structure, taken from Query_Syntax.txt
 		query_structure = '''
@@ -133,6 +145,27 @@ You can Mix & Match any of the fields!!!
 		# While-True loop for continuous run with designated exit parameter
 		while True:
 
+			extension = '.db'
+			result = glob.glob('*.{}'.format(extension))
+			if len(result) == 0: #database not present
+				print("\n 151: Database not detected, enter 'load' to create database:\n\n")
+
+
+
+				flag = False
+				#Validating correct function has been input
+
+				while flag != True:
+					query = input()
+					if query.lower() == "load":
+						self.load()
+						flag = True
+					else:
+						print("Enter 'load' to continue:")
+						pass
+
+
+
 			# First, prompt the user to type their query:
 			print("\n Please enter your query: \n")
 
@@ -148,6 +181,10 @@ You can Mix & Match any of the fields!!!
 					self.help()
 				elif str(query).strip() == 'man':
 					self.help()
+				elif str(query).strip()== 'load':
+					self.load()
+				elif str(query).strip()== 'del':
+					self.delete()
 				
 				else:
 					if str(query).strip() == 'show all':
@@ -184,8 +221,41 @@ You can Mix & Match any of the fields!!!
 
 			else:
 				pass
+	#Load the database, every time this function is called will load a new database. 
+	@error_handler(debug,"IMDB_Query_Engine.load")
+	def load(self):
+		extension = '.db'
+		result = glob.glob('*.{}'.format(extension))
+		if len(result) == 1: #There is a database, remove and recreate. 
+			for element in result:
+				os.remove(element)
+		print("Loading CSVs into Sqlite DB...")
+		conn = CSV2DB.go(self, debug)
+		print("DB creation successful!")
+		print(result)
+		
+		return conn
 
-	@error_handler(debug,"IMDB_Query_Engine.exit")
+	# Delete the db
+	@error_handler(debug,"IMDB_Query_Engine.delete")
+	def delete(self):
+		# deleting db file if exists
+		extension = '.db'
+		result = glob.glob('*.{}'.format(extension))
+		for _file in result:
+			os.remove(_file)
+
+		# deleting any .csv2 files if exists
+		extension = 'csv2'
+		result = glob.glob('*.{}'.format(extension))
+		for csvfile in result:
+			os.remove(csvfile)
+		return
+
+
+
+
+	#@error_handler(debug,"IMDB_Query_Engine.exit")
 	def exit(self,conn):
 		conn.close()
 		try:
