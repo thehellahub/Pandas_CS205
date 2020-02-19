@@ -66,7 +66,7 @@ class ErrorHandlerContext:
 				" \nEXC TYPE: " + "\n\n" + str(exc_type) 	+ \
 				" \nEXC VALUE: " + "\n\n" + str(exc_value) 	+ \
 				" \nPUNCHLINE: " + "\n\n" + str(punchline) 	+ \
-				" \nERROR TRACEBACK: " + "\n\n" + str(traceback_) + "\n" + \
+				" \nERROR TRACEBACK: " + "\n\n" + str(traceback_) )
 
 			print("\n\n Removing .csv2 files and .db file if exists")
 			self.remove_csv2_files_and_db_file()
