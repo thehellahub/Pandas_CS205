@@ -72,6 +72,7 @@ class Query_Interpreter:
 
         desired_data = desired_data.split(",")  # ['title','first_name'.....] makes array of data wanted
 
+
         if debug:
             print("\n\n DEBUG: Desired data fields are: " + str(desired_data) + "\n\n")
 
@@ -105,7 +106,6 @@ class Query_Interpreter:
 
 
         for element in query_data_fields:
-
             # If an element in the desired_data array is NOT in the all_out_data_fields array, return false!
             if element not in all_our_data_fields: 
                 print("\n\n Validation failed for data field in: " + element)
@@ -206,6 +206,38 @@ class Query_Interpreter:
         if debug:
             print("\n\n ** NOTICE: Query Query_Interpreter debug mode ON ** \n\n")
 
+        # Breaking query into array, ie: ['title,first_name,last_name,gender,rank,year', 'title', '"Harry Potter"', 'date', '2008']
+        query = shlex.split(user_query, posix=False)
+
+        desired_data = str(query[0]).strip()  # ['title,first_name,last_name,gender,rank,year']
+
+        if debug:
+            print("\n\nDEBUG: desired data in data comma check before any correction: " + str(desired_data))
+
+        del query[0]
+
+        if desired_data[len(desired_data)-1] == ",":
+            print("\n\nDEBUG: Comma detected at the end of desired data!")
+            desired_data = desired_data[:-1]
+
+            if debug:
+                print("\n\nDEBUG: corrected desired data string without comma should be: " + str(desired_data))
+                print(len(desired_data))
+
+        user_query = desired_data + " "
+
+        for element in query:
+            user_query += str(element) + " "
+
+        user_query = user_query.strip()
+
+        return user_query
+
+    def data_star_check(self, user_query, conn=None, debug=debug):
+
+        if debug:
+            print("\n\n ** NOTICE: Query Query_Interpreter debug mode ON ** \n\n")
+
         # Instructions
         '''
         Query example:
@@ -256,9 +288,21 @@ class Query_Interpreter:
 
         desired_data = query[0]  # ['title,first_name,last_name,gender,rank,year']
 
-        if desired_data[-1] == ",":
-            del desired_data[-1]
-        return desired_data
+        desired_data = desired_data.split(",")  # ['title','first_name'.....] makes array of data wanted
+
+        if (desired_data[0] == '*') and (len(desired_data) == 1):
+
+            print("\n\n DEBUG: STAR NOTATION DETECTED!")
+            desired_data = "title,year,rank,genre,role,first_name,last_name,gender"
+            query[0] = desired_data
+            tmp = user_query[2:]
+            tmp = desired_data + " " + tmp
+            print("\n\n DEBUG: User query being passed back from data_star_check function: " + str(tmp))
+            return tmp
+        else:
+            return user_query
+
+
 
 
 if standalone:

@@ -148,6 +148,17 @@ You can Mix & Match any of the fields!!!
 				else:
 					# Check to make sure that the query passes data field validation testing
 					#@Exception_Handler
+
+					query = Query_Interpreter.data_star_check(self,query,conn,debug)
+
+					if debug:
+						print("\n\n User query being passed to data comma check is: " + str(query))
+
+					query = Query_Interpreter.data_comma_check(self,query,conn,debug)
+
+					if debug:
+						print("\n\n User query being passed to validation checks are: " + str(query))
+
 					if Query_Interpreter.data_field_check(self,query,conn,debug): 	# checking for proper data fields in the query
 						# Check to make sure that the query passes data value validation testing 
 						# @Exception_Handler
