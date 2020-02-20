@@ -4,10 +4,11 @@ import glob
 import sys
 
 log = None
+debug = 0
 
 class ErrorHandlerContext:
 
-	def __init__(self,debug, function_name):
+	def __init__(self,_debug, function_name):
 		self.debug = debug
 		self.function_name = function_name
 
@@ -43,12 +44,12 @@ class ErrorHandlerContext:
 			return
 
 		if str(exc_type).strip() == "<class 'SystemExit'>":
-			print("Exit command detected. Removing .CSV2 files and .db file if exists.. \n\n")
+			print("Exit command detected. Removing .CSV2 files if exists.. \n\n")
 			self.remove_csv2_files_and_db_file()
 			return
 			
 		if str(punchline).strip() == "KeyboardInterrupt":
-			print("\n\n SIGKILL Detected. Removing .CSV2 files and .db file if exists.. \n\n")
+			print("\n\n SIGKILL Detected. Removing .CSV2 files if exists.. \n\n")
 			self.remove_csv2_files_and_db_file()
 			sys.exit()
 			return
@@ -61,14 +62,15 @@ class ErrorHandlerContext:
 			except:
 				punchline = None
 
-			print("\n\n ERROR DETECTED: " + \
-				" \nFUNCTION: " + str(self.function_name) 	+ \
-				" \nEXC TYPE: " + "\n\n" + str(exc_type) 	+ \
-				" \nEXC VALUE: " + "\n\n" + str(exc_value) 	+ \
-				" \nPUNCHLINE: " + "\n\n" + str(punchline) 	+ \
-				" \nERROR TRACEBACK: " + "\n\n" + str(traceback_) )
+			if debug:
+				print("\n\n ERROR DETECTED: " + \
+					" \nFUNCTION: " + str(self.function_name) 	+ \
+					" \nEXC TYPE: " + "\n\n" + str(exc_type) 	+ \
+					" \nEXC VALUE: " + "\n\n" + str(exc_value) 	+ \
+					" \nPUNCHLINE: " + "\n\n" + str(punchline) 	+ \
+					" \nERROR TRACEBACK: " + "\n\n" + str(traceback_) )
 
-			print("\n\n Removing .csv2 files and .db file if exists")
+				print("\n\n Removing .csv2 files if exists")
 			self.remove_csv2_files_and_db_file()
 
 		return
