@@ -189,13 +189,14 @@ class CSV2DB:
         # create the db file
         conn = sqlite3.connect("imdb.db", check_same_thread=False)
         cur = conn.cursor()
-
         return conn,cur
 
+
+    #THIS IS ONLY USED IF STANDALONE FLAG IS ON
     @error_handler(debug,"delete_database")
     def delete_database(self,debug=debug):
         # remove the imdb.db file created
-        extension = '.db'
+        extension = 'db'
         result = glob.glob('*.{}'.format(extension))
 
         for _file in result:
@@ -244,6 +245,7 @@ class CSV2DB:
 
         # END OF FUNCTION
         # DEBUG FOR STANDALONE RUNNING
+
         if standalone:
 
             time.sleep(3)
