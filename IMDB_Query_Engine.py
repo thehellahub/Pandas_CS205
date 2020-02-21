@@ -77,12 +77,17 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 		if len(result) == 1:
 			print("\nDatabase present")
 		else:
-			print("Would you like to create the database? Enter 'load data' to continue, 'exit' to exit:")
-			user_command = input()
-			if user_command.lower() == "load data":
-				self.conn = self.load()
-			elif user_command.lower() =="exit":
-				self.exit(self.conn)
+			flag = False
+			print("Would you like to create the database? Enter 'load' to continue, 'exit' to exit:")
+			while flag != True:
+				user_command = input()
+				if user_command.lower() == "load":
+					self.conn = self.load()
+					flag = True
+				elif user_command.lower() =="exit":
+					self.exit(self.conn)
+				else:
+					print("\nEnter 'load' to continue or 'exit' to exit\n")
 
 		# # Load the IMDB database and create connection object to database
 		# print("Loading CSVs into Sqlite DB...")
@@ -273,7 +278,7 @@ Type man or help for additonal information
 
 
 
-	@error_handler(debug,"IMDB_Query_Engine.exit")
+	#@error_handler(debug,"IMDB_Query_Engine.exit")
 	def exit(self,conn=None):
 		if self.conn != None:
 			self.conn.close()
